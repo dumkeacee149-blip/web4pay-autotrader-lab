@@ -1,7 +1,9 @@
 const $ = (id) => document.getElementById(id);
 
 const STORAGE_KEY = 'web4pay_lobster_trades_v1';
+const LOG_STORAGE_KEY = 'web4pay_lobster_logs_v1';
 const HISTORY_LIMIT = 20;
+const LOG_LIMIT = 300;
 const BSC_MAINNET_ID = 56;
 const PANCAKE_ROUTER = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
 
@@ -62,6 +64,7 @@ const state = {
   intervalId: null,
   position: null,
   history: [],
+  logs: [],
   runNonce: 0,
   monitorInProgress: false,
   lastError: '',
@@ -80,12 +83,37 @@ function toast(message) {
   appendLog(message);
 }
 
+function persistLogs() {
+  localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(state.logs.slice(0, LOG_LIMIT)));
+}
+
+function getLogs() {
+  try {
+    const raw = localStorage.getItem(LOG_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function appendLog(message) {
+  const now = new Date().toLocaleTimeString();
+  const line = `[${now}] ${message}`;
+  state.logs.unshift(line);
+  state.logs = state.logs.slice(0, LOG_LIMIT);
+  persistLogs();
+
   const el = $('log');
   if (!el) return;
-  const now = new Date().toLocaleTimeString();
-  el.textContent = `[${now}] ${message}\n${el.textContent}`;
+  el.textContent = `${line}\n${el.textContent}`;
   el.textContent = el.textContent.slice(0, 16000);
+}
+
+function renderStoredLogs() {
+  const el = $('log');
+  if (!el) return;
+  el.textContent = state.logs.join('\n');
 }
 
 function setField(id, value) {
@@ -651,6 +679,8 @@ function stopButtonHandler() {
 }
 
 function clearLog() {
+  state.logs = [];
+  persistLogs();
   const el = $('log');
   if (el) el.textContent = '';
 }
@@ -684,7 +714,9 @@ function disconnectWallet() {
 
 function init() {
   state.history = getHistory();
+  state.logs = getLogs();
   renderHistory();
+  renderStoredLogs();
 
   $('connectWallet')?.addEventListener('click', ensureBscWalletConnected);
   $('disconnectWallet')?.addEventListener('click', disconnectWallet);
