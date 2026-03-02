@@ -3,12 +3,12 @@ const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = 'web4pay_lobster_trades_v1';
 const HISTORY_LIMIT = 20;
 const BSC_MAINNET_ID = 56;
-const PANCAKE_ROUTER = '0x10ED43C718714eb63d5aA57B78B54704E256024E';
+const PANCAKE_ROUTER = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
 
 const TOKEN_LIST = {
   USDT: {
     symbol: 'USDT',
-    address: '0x55d398326f99059fF775485246999027B3197955',
+    address: '0x55d398326f99059ff775485246999027b3197955',
     decimals: 18,
   },
   BUSD: {
@@ -18,7 +18,7 @@ const TOKEN_LIST = {
   },
   CAKE: {
     symbol: 'CAKE',
-    address: '0x0E09Fabb73BD3Ade0A17Bc2205fE4A9aA6A1',
+    address: '0x0e09fabb73bd3ade0a17bc2205fe4a9aa6a1',
     decimals: 18,
   },
   XVS: {
@@ -28,7 +28,7 @@ const TOKEN_LIST = {
   },
   WBNB: {
     symbol: 'WBNB',
-    address: '0xBB4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     decimals: 18,
   },
 };
