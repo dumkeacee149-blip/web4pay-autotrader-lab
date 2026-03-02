@@ -2360,7 +2360,11 @@ input {
 .lobster-hero .hero-side-right {
   position: absolute;
   right: 14px;
-  top: 12px;
+  top: 10px;
+}
+
+.lobster-console .badges {
+  margin-top: 10px;
 }
 
 .lobster-hero {
@@ -2371,28 +2375,43 @@ input {
 }
 
 .lobster-hero .hero-copy-wrap {
-  display: flex;
-  justify-content: center;
   width: 100%;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .lobster-hero .hero-copy::before {
   display: none;
 }
 
-.trader-titlebar {
-  border: 2px solid #7ad4ff;
-  background: linear-gradient(180deg, #162744 0%, #0f1c33 100%);
-  box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
-  padding: 10px 22px;
-  width: min(760px, calc(100% - 220px));
-  margin: 0 auto;
-  text-align: center;
+.lobster-hero .hero-copy.trader-titlebar {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 4px 180px 0 14px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
 }
 
-.trader-titlebar h1 {
+.lobster-hero .hero-copy.trader-titlebar h1 {
   display: block;
   margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #dff8ff;
+  text-shadow: 0 0 10px rgba(95, 220, 255, .45);
+}
+
+.lobster-hero .hero-copy.trader-titlebar .sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #99d4e8;
 }
 
 
