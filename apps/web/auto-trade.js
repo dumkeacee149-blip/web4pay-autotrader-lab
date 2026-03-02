@@ -287,7 +287,7 @@ async function getSignerAndProvider(forceConnect = false) {
 
   const signer = await provider.getSigner();
   const account = await signer.getAddress();
-  const router = new window.ethers.Contract(PANCAKE_ROUTER, ROUTER_ABI, signer);
+  const router = new window.ethers.Contract(normalizeAddress(PANCAKE_ROUTER), ROUTER_ABI, signer);
 
   state.provider = provider;
   state.signer = signer;
@@ -315,12 +315,12 @@ async function refreshBnbBalance() {
 
 function getTokenContract(token) {
   if (!state.signer) throw new Error('未连接钱包');
-  return new window.ethers.Contract(token.address, ERC20_ABI, state.signer);
+  return new window.ethers.Contract(normalizeAddress(token.address), ERC20_ABI, state.signer);
 }
 
 async function quoteExactIn(tokenIn, tokenOut, amountInWei) {
   if (!state.router) throw new Error('路由未就绪');
-  const amounts = await state.router.getAmountsOut(amountInWei, [tokenIn.address, tokenOut.address]);
+  const amounts = await state.router.getAmountsOut(amountInWei, [normalizeAddress(tokenIn.address), normalizeAddress(tokenOut.address)]);
   return amounts[1];
 }
 
@@ -403,7 +403,7 @@ async function executeBuy(cfg, amountInWei, slippageBps) {
   const tx = await state.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
     amountInWei,
     minOut,
-    [tokenIn.address, tokenOut.address],
+    [normalizeAddress(tokenIn.address), normalizeAddress(tokenOut.address)],
     state.account,
     nowPlusMinutes(10),
     {
@@ -431,7 +431,7 @@ async function executeSell(cfg, amountToSellWei, slippageBps) {
   const tx = await state.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
     amountToSellWei,
     minIn,
-    [tokenOut.address, tokenIn.address],
+    [normalizeAddress(tokenOut.address), normalizeAddress(tokenIn.address)],
     state.account,
     nowPlusMinutes(10),
     {
