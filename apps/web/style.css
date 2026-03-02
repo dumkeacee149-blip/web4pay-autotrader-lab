@@ -2355,24 +2355,38 @@ input {
 /* ===== Lobster auto-trade page ===== */
 .lobster-console { max-width: 1080px; }
 
-.lobster-console .lobster-avatar {
-  width: 86px;
-  height: 86px;
-  border: 3px solid #ff74c3;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 42px;
-  background: #0f1a26;
-  box-shadow: 0 0 0 2px #ff74c3aa inset, 0 0 24px #ff74c3aa;
-  text-shadow: 0 0 10px rgba(255, 116, 195, 0.8);
-  image-rendering: pixelated;
-}
-
 .lobster-return { min-width: 150px; text-align: center; text-decoration: none; white-space: nowrap; }
 
-.lobster-hero { min-height: 106px; }
+.lobster-hero {
+  min-height: 106px;
+  grid-template-columns: 120px 1fr 170px;
+}
+
+.lobster-hero .hero-copy-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.trader-titlebar {
+  border: 2px solid #7ad4ff;
+  background: linear-gradient(180deg, #162744 0%, #0f1c33 100%);
+  box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
+  padding: 10px 22px;
+  min-width: 320px;
+  text-align: center;
+}
+
+.trader-titlebar h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  font-size: 22px;
+  filter: drop-shadow(0 0 6px rgba(120, 220, 255, 0.75));
+}
 
 #lobsterSpeech {
   position: absolute;
