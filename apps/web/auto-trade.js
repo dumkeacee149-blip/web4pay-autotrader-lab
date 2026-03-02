@@ -701,7 +701,7 @@ function init() {
 
   setRunningState(false);
   updatePhase('Ready');
-  toast('自动交易页面就绪（单向长线：买入后等待 TP/SL)');
+  toast('页面就绪');
 }
 
 window.addEventListener('DOMContentLoaded', init);

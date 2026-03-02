@@ -2359,16 +2359,13 @@ input {
 
 .lobster-hero {
   min-height: 106px;
-  grid-template-columns: 1fr 170px;
-}
-
-.lobster-hero .hero-side-left {
-  display: none;
+  grid-template-columns: 1fr auto;
+  align-items: start;
 }
 
 .lobster-hero .hero-copy-wrap {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .trader-titlebar {
@@ -2377,7 +2374,7 @@ input {
   box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
   padding: 10px 22px;
   min-width: 320px;
-  text-align: center;
+  text-align: left;
 }
 
 .trader-titlebar h1 {
@@ -2424,4 +2421,15 @@ input {
   color: #96b3c2;
   margin-top: 5px;
   font-size: 12px;
+}
+
+.lobster-console .badges {
+  justify-content: flex-start;
+}
+
+.lobster-console #tradeStatus {
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
