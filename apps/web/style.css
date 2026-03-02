@@ -2357,15 +2357,23 @@ input {
 
 .lobster-return { min-width: 150px; text-align: center; text-decoration: none; white-space: nowrap; }
 
+.lobster-hero .hero-side-right {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+}
+
 .lobster-hero {
   min-height: 106px;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   align-items: start;
+  position: relative;
 }
 
 .lobster-hero .hero-copy-wrap {
   display: flex;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .trader-titlebar {
@@ -2373,7 +2381,7 @@ input {
   background: linear-gradient(180deg, #162744 0%, #0f1c33 100%);
   box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
   padding: 10px 22px;
-  min-width: 320px;
+  min-width: 360px;
   text-align: left;
 }
 
