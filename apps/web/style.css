@@ -2372,8 +2372,12 @@ input {
 
 .lobster-hero .hero-copy-wrap {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
+}
+
+.lobster-hero .hero-copy::before {
+  display: none;
 }
 
 .trader-titlebar {
@@ -2381,15 +2385,14 @@ input {
   background: linear-gradient(180deg, #162744 0%, #0f1c33 100%);
   box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
   padding: 10px 22px;
-  min-width: 360px;
-  text-align: left;
+  width: min(760px, calc(100% - 220px));
+  margin: 0 auto;
+  text-align: center;
 }
 
 .trader-titlebar h1 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  display: block;
+  margin: 0;
 }
 
 
