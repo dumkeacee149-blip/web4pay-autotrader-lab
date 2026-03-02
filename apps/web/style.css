@@ -2374,7 +2374,8 @@ input {
 }
 
 .lobster-hero .hero-copy-wrap {
-  width: 100%;
+  width: min(920px, calc(100% - 180px));
+  margin: 0 auto;
   padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
@@ -2474,7 +2475,7 @@ input {
 
 @media (max-width: 760px) {
   .lobster-hero .hero-copy-wrap {
-    padding-right: 0 !important;
+    width: 100%;
   }
 
   .lobster-hero .hero-side-right {
