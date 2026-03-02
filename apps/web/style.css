@@ -2375,7 +2375,7 @@ input {
 
 .lobster-hero .hero-copy-wrap {
   width: 100%;
-  padding: 0 180px 0 0 !important;
+  padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -2393,11 +2393,12 @@ input {
   width: 100%;
   max-width: 860px;
   margin: 0;
-  text-align: left;
+  text-align: center;
 }
 
 .lobster-hero .hero-copy.trader-titlebar h1 {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
   margin: 0;
@@ -2413,7 +2414,7 @@ input {
   margin-top: 6px;
   font-size: 13px;
   color: #99d4e8;
-  text-align: left;
+  text-align: center;
 }
 
 .brand-icon {
