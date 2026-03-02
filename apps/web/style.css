@@ -2369,16 +2369,13 @@ input {
 
 .lobster-hero {
   min-height: 106px;
-  grid-template-columns: 1fr;
-  align-items: start;
   position: relative;
+  display: block;
 }
 
 .lobster-hero .hero-copy-wrap {
-  display: flex;
-  justify-content: center;
   width: 100%;
-  padding: 0 !important;
+  padding: 0 180px 0 0 !important;
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -2392,17 +2389,17 @@ input {
   border: 2px solid #7ad4ff;
   background: linear-gradient(180deg, #162744 0%, #0f1c33 100%);
   box-shadow: 0 0 0 2px #243f67 inset, 0 0 14px rgba(90, 174, 255, 0.35);
-  padding: 10px 22px;
-  width: min(760px, calc(100% - 220px));
-  margin: 0 auto;
-  text-align: center;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 860px;
+  margin: 0;
+  text-align: left;
 }
 
 .lobster-hero .hero-copy.trader-titlebar h1 {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -2416,11 +2413,11 @@ input {
   margin-top: 6px;
   font-size: 13px;
   color: #99d4e8;
-  text-align: center;
+  text-align: left;
 }
 
 .brand-icon {
-  font-size: 20px;
+  font-size: 18px;
   filter: drop-shadow(0 0 6px rgba(120, 220, 255, 0.65));
 }
 
@@ -2472,4 +2469,19 @@ input {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .lobster-hero .hero-copy-wrap {
+    padding-right: 0 !important;
+  }
+
+  .lobster-hero .hero-side-right {
+    position: static;
+    margin-top: 8px;
+  }
+
+  .lobster-hero .hero-copy.trader-titlebar {
+    max-width: none;
+  }
 }
