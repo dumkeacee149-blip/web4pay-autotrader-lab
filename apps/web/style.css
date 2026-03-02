@@ -2359,7 +2359,11 @@ input {
 
 .lobster-hero {
   min-height: 106px;
-  grid-template-columns: 120px 1fr 170px;
+  grid-template-columns: 1fr 170px;
+}
+
+.lobster-hero .hero-side-left {
+  display: none;
 }
 
 .lobster-hero .hero-copy-wrap {
@@ -2383,10 +2387,6 @@ input {
   gap: 10px;
 }
 
-.brand-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 0 6px rgba(120, 220, 255, 0.75));
-}
 
 #lobsterSpeech {
   position: absolute;
