@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
 
-const STORAGE_KEY = 'web4pay_lobster_trades_v1';
+const STORAGE_KEY = 'web4pay_lobster_trades_v2';
 const HISTORY_LIMIT = 20;
 const BSC_MAINNET_ID = 56;
 const PANCAKE_ROUTER = '0x10ed43c718714eb63d5aa57b78b54704e256024e';
