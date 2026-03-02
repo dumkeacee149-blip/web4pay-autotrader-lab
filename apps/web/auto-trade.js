@@ -114,13 +114,13 @@ function toBigInt(v) {
 
 function ensureEthersLoaded() {
   if (!window.ethers || !window.ethers.Contract) {
-    throw new Error('ethers.js failed to load');
+    throw new Error('ethers.js 未加载成功');
   }
 }
 
 function getToken(symbol) {
   const token = TOKEN_LIST[symbol];
-  if (!token) throw new Error(`Unknown token: ${symbol}`);
+  if (!token) throw new Error(`未知代币：${symbol}`);
   return token;
 }
 
@@ -136,14 +136,14 @@ function getPairConfig() {
 function getInputAmountWei(tokenIn) {
   const amount = parseNum(getField('amountIn', '10'), 0);
   if (!Number.isFinite(amount) || amount <= 0) {
-    throw new Error('Buy amount must be greater than 0');
+    throw new Error('买入金额必须大于 0');
   }
   return window.ethers.parseUnits(String(amount), tokenIn.decimals);
 }
 
 function parsePercent(value, fallback) {
   const v = parseNum(value, fallback);
-  if (v <= 0 || v >= 1000) throw new Error('Invalid percentage parameter (must be >0 and <1000)');
+  if (v <= 0 || v >= 1000) throw new Error('百分比参数不合理（应 >0 且 <1000）');
   return v;
 }
 
@@ -169,7 +169,7 @@ function renderHistory() {
   if (!list) return;
   list.textContent = '';
   if (!state.history.length) {
-    list.textContent = 'No records yet';
+    list.textContent = '暂无记录';
     return;
   }
 
@@ -243,14 +243,14 @@ function setPositionUi(position) {
 async function getSignerAndProvider(forceConnect = false) {
   ensureEthersLoaded();
   if (!window.ethereum || typeof window.ethereum.request !== 'function') {
-    throw new Error('No available wallet detected (MetaMask or compatible wallet required)');
+    throw new Error('未检测到可用钱包（MetaMask / 兼容钱包）');
   }
 
   const provider = new window.ethers.BrowserProvider(window.ethereum);
   if (forceConnect) {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     if (!Array.isArray(accounts) || !accounts[0]) {
-      throw new Error('Wallet did not return an account');
+      throw new Error('钱包未返回账户');
     }
   }
 
@@ -276,12 +276,12 @@ async function getSignerAndProvider(forceConnect = false) {
         });
       } else {
         const msg = err?.message || 'Unknown wallet error';
-        throw new Error(`Failed to switch wallet network: ${msg}`);
+        throw new Error(`钱包网络切换失败：${msg}`);
       }
     }
     const afterNetwork = await provider.getNetwork();
     if (Number(afterNetwork.chainId) !== BSC_MAINNET_ID) {
-      throw new Error(`Please switch to BSC Mainnet and retry (current chainId=${afterNetwork.chainId}）`);
+      throw new Error(`请切换到 BSC 主网后重试（当前 chainId=${afterNetwork.chainId}）`);
     }
   }
 
@@ -301,10 +301,10 @@ async function getSignerAndProvider(forceConnect = false) {
 async function ensureBscWalletConnected() {
   await getSignerAndProvider(true);
   const conn = $('connBadge');
-  if (conn) conn.textContent = `Connected: ${state.account.slice(0, 6)}...${state.account.slice(-4)}`;
+  if (conn) conn.textContent = `已连接：${state.account.slice(0, 6)}...${state.account.slice(-4)}`;
   setField('walletAddress', state.account);
   await refreshBnbBalance();
-  toast(`Wallet connected: ${state.account}`);
+  toast(`钱包已连接：${state.account}`);
 }
 
 async function refreshBnbBalance() {
@@ -314,12 +314,12 @@ async function refreshBnbBalance() {
 }
 
 function getTokenContract(token) {
-  if (!state.signer) throw new Error('Wallet not connected');
+  if (!state.signer) throw new Error('未连接钱包');
   return new window.ethers.Contract(normalizeAddress(token.address), ERC20_ABI, state.signer);
 }
 
 async function quoteExactIn(tokenIn, tokenOut, amountInWei) {
-  if (!state.router) throw new Error('Router is not ready');
+  if (!state.router) throw new Error('路由未就绪');
   const amounts = await state.router.getAmountsOut(amountInWei, [normalizeAddress(tokenIn.address), normalizeAddress(tokenOut.address)]);
   return amounts[1];
 }
@@ -337,7 +337,7 @@ async function withRetry(label, fn, retries = 2) {
       lastErr = err;
       if (i >= retries) break;
       const backoff = 500 * Math.pow(1.8, i);
-      appendLog(`${label} retry ${i + 1}/${retries}: ${err.message}`);
+      appendLog(`${label} 重试 ${i + 1}/${retries}: ${err.message}`);
       await sleep(backoff);
     }
   }
@@ -357,7 +357,7 @@ async function ensureAllowance(tokenIn, amountInWei) {
   appendLog(`Approve ${tokenIn.symbol}: ${window.ethers.formatUnits(amountInWei, tokenIn.decimals)}`);
   const tx = await contract.approve(PANCAKE_ROUTER, amountInWei);
   const rec = await tx.wait();
-  appendLog(`Approve confirmed, gas used: ${rec?.gasUsed ? rec.gasUsed.toString() : 'n/a'}, tx=${tx.hash}`);
+  appendLog(`Approve 已确认，区块Gas: ${rec?.gasUsed ? rec.gasUsed.toString() : 'n/a'}，tx=${tx.hash}`);
 }
 
 async function preflight(cfg, amountInWei) {
@@ -373,15 +373,15 @@ async function preflight(cfg, amountInWei) {
   const amountInNum = toNumber(tokenIn, amountInWei);
   const balInNum = toNumber(tokenIn, balInWei);
   if (balInWei < amountInWei) {
-    throw new Error(`${tokenIn.symbol} insufficient balance: ${balInNum} < ${amountInNum}`);
+    throw new Error(`${tokenIn.symbol} 余额不足：${balInNum} < ${amountInNum}`);
   }
   if (quoteWei <= 0n) {
-    throw new Error('Quote failed: pool returned zero output');
+    throw new Error('报价失败：当前池子返回 0 输出');
   }
 
   const minBnb = window.ethers.parseEther('0.0006');
   if (balanceBnb < minBnb) {
-    throw new Error('BNB balance too low for gas (recommended >= 0.0006 BNB)');
+    throw new Error('BNB 余额过低，请预留 Gas 费用（建议 >= 0.0006 BNB）');
   }
 
   return {
@@ -483,14 +483,14 @@ async function closePositionIfNeeded(cfg, cfgs) {
     setField('livePrice', `${currentValue.toFixed(6)} ${cfg.in}`);
 
     if (pnl >= takeProfitPct) {
-      appendLog(`Take-profit triggered ${pnl}% >= ${takeProfitPct}%`);
-      showSpeech('Take-profit reached, closing position');
+      appendLog(`触发止盈 ${pnl}% >= ${takeProfitPct}%`);
+      showSpeech('到达止盈，执行平仓');
       await closePosition(cfg, slippageBps, true);
       return;
     }
     if (pnl <= -Math.abs(stopLossPct)) {
-      appendLog(`Stop-loss triggered ${pnl}% <= -${Math.abs(stopLossPct)}%`);
-      showSpeech('Stop-loss reached, closing position');
+      appendLog(`触发止损 ${pnl}% <= -${Math.abs(stopLossPct)}%`);
+      showSpeech('到达止损，执行平仓');
       await closePosition(cfg, slippageBps, true);
       return;
     }
@@ -527,7 +527,7 @@ async function closePosition(cfg, slippageBps, auto = true) {
   state.position.status = 'closed';
   state.position.closedAt = new Date().toISOString();
 
-  appendLog(`Close position success tx=${sell.txHash} pnl=${state.position.pnlPct}% gas=${sell.gasUsed}`);
+  appendLog(`平仓成功 tx=${sell.txHash} pnl=${state.position.pnlPct}% gas=${sell.gasUsed}`);
   pushHistory(state.position);
   setPositionUi(state.position);
   updatePhase('closed');
@@ -552,15 +552,15 @@ function stopStrategy(errorMode = false) {
   if (state.position && state.position.status === 'closed') {
     setPositionUi(state.position);
   }
-  updatePhase('Stopped');
+  updatePhase('已停止');
 }
 
 async function startStrategy() {
   try {
     await ensureBscWalletConnected();
   } catch (err) {
-    appendLog(`Connection failed: ${err.message}`);
-    toast('Connection failed, cannot start');
+    appendLog(`连接失败: ${err.message}`);
+    toast('连接失败，不能启动');
     return;
   }
 
@@ -580,12 +580,12 @@ async function startStrategy() {
   const runId = ++state.runNonce;
 
   setRunningState(true);
-  updatePhase('Preparing buy');
-  appendLog(`Single-direction strategy started: ${tokenIn.symbol}/${tokenOut.symbol}, TP=${takeProfitPct}%, SL=${stopLossPct}%`);
-  showSpeech('Starting single-direction strategy');
+  updatePhase('准备买入');
+  appendLog(`单边策略启动：${tokenIn.symbol}/${tokenOut.symbol}，TP=${takeProfitPct}%，SL=${stopLossPct}%`);
+  showSpeech('开始执行单边策略');
 
   try {
-    await withRetry('Preflight', () => preflight(cfg, amountInWei));
+    await withRetry('预检', () => preflight(cfg, amountInWei));
 
     const outPreview = await quoteExactIn(tokenIn, tokenOut, amountInWei);
     const entryRate = toNumber(tokenOut, outPreview) / amountInDisplay;
@@ -612,10 +612,10 @@ async function startStrategy() {
       runId,
     };
 
-    updatePhase('Bought, waiting for trigger');
+    updatePhase('已买入，等待触发');
     setField('unrealizedPnl', '0%');
     setField('livePrice', '...');
-    appendLog(`Buy confirmed on-chain: ${buy.txHash}, gas=${buy.gasUsed || 'n/a'}`);
+    appendLog(`买入已上链: ${buy.txHash}，本次消耗 gas=${buy.gasUsed || 'n/a'}`);
 
     state.intervalId = window.setInterval(() => {
       closePositionIfNeeded(cfg, {
@@ -624,19 +624,19 @@ async function startStrategy() {
         slippageBps,
       }).catch((err) => {
         state.lastError = err.message;
-        appendLog(`Monitor failed: ${err.message}`);
+        appendLog(`监控失败: ${err.message}`);
       });
     }, intervalSec * 1000);
 
-    // Run the first check immediately to reduce startup idle time
+    // 快速首轮执行，减少初始空窗
     await closePositionIfNeeded(cfg, {
       takeProfitPct,
       stopLossPct,
       slippageBps,
     });
   } catch (err) {
-    toast(`Start failed: ${err.message}`);
-    appendLog(`Start failed: ${err.message}`);
+    toast(`启动失败: ${err.message}`);
+    appendLog(`启动失败: ${err.message}`);
     stopStrategy(true);
   }
 }
@@ -646,7 +646,7 @@ function stopButtonHandler() {
     stopStrategy();
     return;
   }
-  appendLog('Manual stop: keep current position and stop monitoring');
+  appendLog('手动停止：保留当前仓位，停止监听');
   stopStrategy(true);
 }
 
@@ -659,13 +659,13 @@ function copyLog() {
   const el = $('log');
   if (!el) return;
   if (!navigator?.clipboard?.writeText) {
-    toast('Current browser does not support clipboard copy');
+    toast('当前浏览器不支持复制');
     return;
   }
   navigator.clipboard.writeText(el.textContent || '').then(() => {
-    toast('Logs copied');
+    toast('日志已复制');
   }).catch(() => {
-    toast('Copy failed');
+    toast('复制失败');
   });
 }
 
@@ -679,7 +679,7 @@ function disconnectWallet() {
   setField('bnbBalance', '');
   const conn = $('connBadge');
   if (conn) conn.textContent = 'Not connected';
-  toast('Wallet disconnected (refresh to reconnect)');
+  toast('钱包断开成功（刷新可重新连接）');
 }
 
 function init() {
@@ -701,7 +701,7 @@ function init() {
 
   setRunningState(false);
   updatePhase('Ready');
-  toast('Auto-trade page ready (single-direction long: buy and wait for TP/SL)');
+  toast('自动交易页面就绪（单向长线：买入后等待 TP/SL)');
 }
 
 window.addEventListener('DOMContentLoaded', init);
