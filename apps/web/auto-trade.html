@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web4Pay BSC Auto Trader</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.14.3/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <main class="console lobster-console">
+    <header class="hero lobster-hero">
+      <div class="hero-side hero-side-left">
+        <div class="lobster-avatar">🦞</div>
+      </div>
+      <div class="hero-copy-wrap">
+        <div class="hero-copy">
+          <h1>🐚 Lobster Auto Trader</h1>
+          <p class="sub">BSC Mainnet • Wallet-Mode · TP/SL 自动交易</p>
+        </div>
+        <div class="hero-badges">
+          <span>✅ Mainnet（链ID:56）</span>
+          <span>🦞 赛博像素卡通风格</span>
+          <span>🛑 不提供科幻元素</span>
+        </div>
+      </div>
+      <div class="hero-side hero-side-right">
+        <a class="pixel-btn accent lobster-return" href="./index.html">← 回到主站</a>
+      </div>
+      <div class="robot-speech" role="status" aria-live="polite" hidden id="lobsterSpeech"></div>
+    </header>
+
+    <div class="badges">
+      <span>钱包模式：A（你自己的钱包）</span>
+      <span id="connBadge">未连接</span>
+      <span id="tradeStatus">未启动</span>
+    </div>
+
+    <section class="grid">
+      <article class="card">
+        <h2>1️⃣ 连接钱包</h2>
+        <p class="help">请先连接钱包，页面需要你在主网签名确认交易。</p>
+        <div class="row" style="grid-template-columns:1fr 1fr;">
+          <button id="connectWallet" class="pixel-btn">连接钱包</button>
+          <button id="disconnectWallet" class="pixel-btn warn">断开</button>
+        </div>
+        <label>钱包地址</label>
+        <input id="walletAddress" readonly placeholder="未连接" />
+        <label>BSC 主网 ETH 余额</label>
+        <input id="bnbBalance" readonly placeholder="0.0000" />
+      </article>
+
+      <article class="card">
+        <h2>2️⃣ 策略设置</h2>
+        <label>交易对</label>
+        <select id="pairSymbol">
+          <option value="USDT_WBNB">USDT → WBNB</option>
+          <option value="BUSD_WBNB">BUSD → WBNB</option>
+          <option value="CAKE_WBNB">CAKE → WBNB</option>
+          <option value="XVS_WBNB">XVS → WBNB</option>
+        </select>
+        <label>买入金额（输入代币）</label>
+        <input id="amountIn" type="number" value="10" min="1" step="0.1" />
+        <label>止盈（%）</label>
+        <input id="takeProfit" type="number" value="5" min="0.1" step="0.1" />
+        <label>止损（%）</label>
+        <input id="stopLoss" type="number" value="2" min="0.1" step="0.1" />
+      </article>
+
+      <article class="card">
+        <h2>3️⃣ 执行控制</h2>
+        <label>轮询间隔（秒）</label>
+        <input id="intervalSec" type="number" value="12" min="4" step="1" />
+        <label>最大滑点（BPS）</label>
+        <input id="slippageBps" type="number" value="80" min="10" max="1000" step="5" />
+        <div class="row" style="grid-template-columns:1fr 1fr;">
+          <button id="startBot" class="pixel-btn">启动策略</button>
+          <button id="stopBot" class="pixel-btn warn" disabled>停止策略</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>仓位与状态</h2>
+        <label>当前阶段</label>
+        <input id="phase" readonly value="待启动" />
+        <label>买入后价格</label>
+        <input id="entryRate" readonly placeholder="未开始" />
+        <label>未实现盈亏（%）</label>
+        <input id="unrealizedPnl" readonly placeholder="0.00" />
+        <label>持仓数量（WBNB）</label>
+        <input id="holdingAmount" readonly placeholder="0" />
+        <label>当前成交价（约）</label>
+        <input id="livePrice" readonly placeholder="--" />
+      </article>
+
+      <article class="card full">
+        <h2>事件与结果</h2>
+        <div class="help-block">
+          <strong>风险提醒：</strong> 此功能会自动向 BSC 主网发送交易，请确认链上资金与 gas 预算。参数只用于测试，请先用小额实操。
+        </div>
+        <pre id="log" class="code" style="height: 220px;"></pre>
+        <div class="row" style="grid-template-columns:1fr 1fr;">
+          <button id="clearLog" class="pixel-btn">清空日志</button>
+          <button id="copyLog" class="pixel-btn accent">复制日志</button>
+        </div>
+      </article>
+
+      <article class="card full">
+        <h2>历史策略</h2>
+        <div id="tradeHistory" class="report-list">暂无记录</div>
+      </article>
+    </section>
+  </main>
+
+  <script src="./auto-trade.js"></script>
+</body>
+</html>

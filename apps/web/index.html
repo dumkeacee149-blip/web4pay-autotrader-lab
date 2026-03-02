@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web4Pay Pixel Console</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <main class="console">
+    <header class="hero">
+      <div class="hero-side hero-side-left">
+        <div id="retroRobotWrap" class="robot-wrap"><img id="retroRobot" class="hero-art" src="./assets/pixel-capsule.svg" alt="pixel mascot" /></div>
+      </div>
+      <div class="hero-copy-wrap">
+        <div class="hero-copy">
+          <h1>Web4Pay Neon District</h1>
+          <p class="sub">Cyberpunk Pixel Style · Neon City Console</p>
+        </div>
+        <div class="hero-badges">
+          <span>⚡ Base on-chain</span>
+          <span>🤖 Robot Agent</span>
+          <span>✨ Yield demo</span>
+        </div>
+      </div>
+      <div class="hero-side hero-side-right">
+        <div class="corner-robot-wrap" id="cornerRobotWrap" aria-hidden="true">
+          <div class="corner-robot" id="cornerRobot">
+            <span class="c-eye c-eye-l"></span>
+            <span class="c-eye c-eye-r"></span>
+            <span class="c-antenna"></span>
+            <span class="c-mouth"></span>
+          </div>
+        </div>
+      </div>
+      <div id="robotSpeech" class="robot-speech" role="status" aria-live="polite" hidden></div>
+      <div id="neonLine" class="neon-line" aria-hidden="true"></div>
+    </header>
+
+    <div class="badges">
+      <span>API: <strong id="apiBaseLabel">http://127.0.0.1:3000</strong></span>
+      <span>Mode: <strong id="modeBadge">Agent-Only</strong></span>
+      <span>Status: <strong id="chainState">Not checked</strong></span>
+      <span><a href="./auto-trade.html" class="pixel-btn" style="padding: 5px 8px; line-height: 1.2; font-size: 11px;">🦞 进入自动交易网站</a></span>
+    </div>
+
+    <section class="card market-scene" aria-label="Neon robot market scene">
+      <div class="scene-sign top">SILICON ECONOMY</div>
+      <div class="scene-grid"></div>
+      <div class="scene-core">
+        <div class="code-screen">
+          <div class="code-title">CODE CREDIT</div>
+          <div class="code-lines">if (agent.score &gt; 700) approve();</div>
+          <div class="code-lines">wallet.transfer(coin, escrow);</div>
+          <div class="thumb">👍 VERIFIED</div>
+        </div>
+
+        <div class="cashier-bot" aria-hidden="true">
+          <span class="eye l"></span><span class="eye r"></span>
+          <span class="mouth"></span>
+        </div>
+
+        <div class="mini-bot" aria-hidden="true">
+          <span class="antenna"></span>
+          <span class="face"></span>
+          <span class="wallet">$</span>
+        </div>
+
+        <div class="crowd" aria-hidden="true">
+          <span class="bot b1"></span>
+          <span class="bot b2"></span>
+          <span class="bot b3"></span>
+          <span class="bot b4"></span>
+        </div>
+
+        <div class="scene-sign left">V1 TESTNET DROP</div>
+        <div class="scene-sign right">NATIVE AGENT</div>
+      </div>
+    </section>
+
+    <section class="card runcard demo-admin-only">
+      <h2>🚀 One-click Demo</h2>
+      <p class="help">Auto flow: Check chain → Create Agent → Create Quote → Create Escrow → Mark deposited → Release.</p>
+      <div class="row" style="grid-template-columns: 1fr 1fr;">
+        <button id="runDemo" class="pixel-btn">Run Full Demo Flow</button>
+        <button id="resetDemo" class="pixel-btn warn">Reset Flow</button>
+      </div>
+      <div class="row" style="grid-template-columns: 1fr 1fr;">
+        <button id="downloadDemoReport" class="pixel-btn accent">Export Demo Report</button>
+        <button id="downloadDemoReportCsv" class="pixel-btn">Export Demo Report(CSV)</button>
+      </div>
+      <div class="row" style="grid-template-columns: 1fr 1fr;">
+        <button id="downloadLog" class="pixel-btn warn">Export Logs</button>
+      </div>
+      <div class="stepper">
+        <span id="step-agent">1 Agent</span>
+        <span id="step-quote">2 Quote</span>
+        <span id="step-escrow">3 Escrow</span>
+        <span id="step-release">4 Release</span>
+      </div>
+      <div class="toast" id="resultToast" role="status" aria-live="polite">Idle</div>
+    </section>
+
+    <section class="card status-board demo-admin-only">
+      <h2>📊 Flow Status Board</h2>
+      <div class="status-track" aria-hidden="true">
+        <div id="statusFill" class="status-fill"></div>
+      </div>
+      <div class="status-labels">
+        <span>Not Started</span><span>Submitted</span><span>In Escrow</span><span>Pending Release</span><span>Completed</span>
+      </div>
+      <div class="status-chip" id="statusTag">Waiting to Start</div>
+      <div class="status-summary" id="statusSummary">Flow has not started yet</div>
+      <details class="help-block">
+        <summary>Quick Notes</summary>
+        <ul>
+          <li>Set API and token in “Auth & Environment” first.</li>
+          <li>Uses local mock flow by default (ONCHAIN_ENABLED=0), ideal for demo.</li>
+          <li>Current mode is “Agent-Only Demo”: only one-click flow is enabled; manual buttons are disabled.</li>
+          <li>Yield rate is demo-only (annualized display) and not a real financial return promise.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>🔐 Auth & Environment</h2>
+        <label>API Token</label>
+        <input id="token" placeholder="dev-token-1" value="dev-token-1" />
+
+        <label>API Base</label>
+        <input id="apiBase" placeholder="http://127.0.0.1:3000" value="http://127.0.0.1:3000" />
+
+        <div class="row">
+          <button id="saveConfig" class="pixel-btn">Save Config</button>
+          <button id="checkChain" class="pixel-btn">Check Chain</button>
+        </div>
+        <pre id="chainInfo" class="code">Click "Check Chain" to view /v1/chain</pre>
+      </article>
+
+      <article class="card">
+        <h2>🤖 Agent</h2>
+        <label>Agent Name</label>
+        <input id="agentName" value="bot-pixie" />
+        <button id="createAgent" class="pixel-btn" disabled title="Manual create disabled in Agent-Only mode">Create Agent</button>
+        <label>Latest Agent</label>
+        <input id="agentId" readonly placeholder="Auto-filled after creation" />
+        <label>Payout Wallet</label>
+        <input id="agentWallet" readonly placeholder="Not linked yet" />
+        <button id="connectWallet" class="pixel-btn accent">Connect Wallet for Yield</button>
+        <button id="refreshWallet" class="pixel-btn">Refresh Wallet</button>
+        <label>YIELD Balance (read-only)</label>
+        <input id="yieldBalance" readonly placeholder="Not queried" />
+        <div class="help" id="yieldRateHint">Yield rate: loading...</div>
+        <div class="help">Yield token withdrawal is not available yet; it will open after Base launch.</div>
+        <button id="refreshYield" class="pixel-btn warn">Refresh Yield Balance</button>
+        <button id="withdrawYield" class="pixel-btn accent">Withdraw YIELD</button>
+      </article>
+
+      <article class="card">
+        <h2>📄 Quote</h2>
+        <label>Payee Address</label>
+        <input id="payee" value="0x1111111111111111111111111111111111111111" readonly title="System-managed payee" />
+        <label>Amount (USDC)</label>
+        <input id="amount" value="1.23" type="number" step="0.01" readonly title="Amount is fixed by demo flow" />
+        <label>Order ID</label>
+        <input id="orderId" value="demo-order-" readonly title="Order ID is auto-generated by the system" />
+        <button id="createQuote" class="pixel-btn" disabled title="Manual create disabled in Agent-Only mode">Create Quote</button>
+        <label>Latest Quote</label>
+        <input id="quoteId" readonly placeholder="Auto-filled after creation" />
+      </article>
+
+      <article class="card">
+        <h2>💼 Escrow</h2>
+        <button id="createEscrow" class="pixel-btn" disabled title="Manual create disabled in Agent-Only mode">Create Escrow (Simulated)</button>
+        <button id="markDeposited" class="pixel-btn warn" disabled title="Manual deposit disabled in Agent-Only mode">Mark as Deposited (Sim)</button>
+        <button id="releaseEscrow" class="pixel-btn accent" disabled title="Manual release disabled in Agent-Only mode">Release to Payee</button>
+        <label>Escrow ID</label>
+        <input id="escrowId" readonly placeholder="Auto-filled after creation" />
+        <pre id="escrowInfo" class="code">Escrow not created yet</pre>
+      </article>
+
+      <article class="card full demo-admin-only">
+        <h2>🎮 Event Log</h2>
+        <div class="row">
+          <button id="clearLog" class="pixel-btn">Clear Logs</button>
+        </div>
+        <pre id="log" class="code"></pre>
+
+        <h3>📁 Demo Report Downloads</h3>
+        <div id="reportList" class="report-list">No reports yet</div>
+      </article>
+    </section>
+  
+  <div class="pixel-orb" aria-hidden="true"></div>
+</main>
+
+  <div class="mobile-actions demo-admin-only">
+    <button id="runDemoMobile" class="pixel-btn">One-click Demo</button>
+    <button id="refreshState" class="pixel-btn warn">Refresh Status</button>
+  </div>
+
+  <div id="resultModal" class="modal" aria-hidden="true">
+    <div class="modal-inner">
+      <div class="modal-title">🎉 Demo Result</div>
+      <p id="resultText">Result details</p>
+      <button id="modalClose" class="pixel-btn accent">Got it</button>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
